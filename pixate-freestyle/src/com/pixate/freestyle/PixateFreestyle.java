@@ -104,13 +104,16 @@ public class PixateFreestyle {
 
     private static final String TAG = PixateFreestyle.class.getSimpleName();
     public static final boolean ICS_OR_BETTER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-    public static String DEFAULT_CSS = "default.css";
+    public static String DEFAULT_CSS = "HTML/Native/default.css";
     private static AtomicBoolean cssLoaded = new AtomicBoolean(false);
 
     private static Object mLifecycleCallbacks = null;
 
     private static boolean mAppInited = false;
     private static Context mAppContext = null;
+
+
+
 
     /**
      * Initialize Pixate with the given {@link Context}.
@@ -127,8 +130,11 @@ public class PixateFreestyle {
 
         if (!cssLoaded.getAndSet(true)) {
             // try to load the default CSS ones.
-            PXStylesheet stylesheet = PXStylesheet.getStyleSheetFromFilePath(
+            PXStylesheet stylesheet = PXStylesheet.getStyleSheetFromInternalStorage(
                     context.getApplicationContext(), DEFAULT_CSS, PXStyleSheetOrigin.APPLICATION);
+
+
+
             if (stylesheet != null) {
                 logErrors(stylesheet.getErrors());
             }
@@ -136,7 +142,23 @@ public class PixateFreestyle {
 
         // Disabled, because we may not even need a class loader.
         // CustomClassLoader.useFor(context);
+        initOtherComponents(context);
+    }
 
+
+    public static void init(Context context, String css) {
+
+        PXStylesheet stylesheet = PXStylesheet.getStyleSheetFromFilePath(
+                context.getApplicationContext(), css, PXStyleSheetOrigin.VIEW);
+
+        if (stylesheet != null) {
+            logErrors(stylesheet.getErrors());
+        }
+
+        initOtherComponents(context);
+    }
+
+    private static void initOtherComponents(Context context) {
         if (ICS_OR_BETTER && !mAppInited) {
             initApp(context);
         }
@@ -158,7 +180,6 @@ public class PixateFreestyle {
 
         }
     }
-
     /**
      * Initialize Pixate with the given Fragment.
      * 

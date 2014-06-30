@@ -93,6 +93,14 @@ public class PXStylesheet {
         return null;
     }
 
+
+    public static PXStylesheet getStyleSheetFromInternalStorage(Context context, String aFilePath,
+                                                         PXStyleSheetOrigin origin) {
+            String source = new String(context.getFilesDir().getPath() + "/" + aFilePath);
+            return getStyleSheetFromSource(source, origin, aFilePath);
+    }
+
+
     // PUBLIC
 
     public PXStylesheet() {
