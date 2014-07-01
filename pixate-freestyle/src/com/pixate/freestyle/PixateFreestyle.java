@@ -134,7 +134,6 @@ public class PixateFreestyle {
                     context.getApplicationContext(), DEFAULT_CSS, PXStyleSheetOrigin.APPLICATION);
 
 
-
             if (stylesheet != null) {
                 logErrors(stylesheet.getErrors());
             }
@@ -148,7 +147,7 @@ public class PixateFreestyle {
 
     public static void init(Context context, String css) {
 
-        PXStylesheet stylesheet = PXStylesheet.getStyleSheetFromFilePath(
+        PXStylesheet stylesheet = PXStylesheet.getStyleSheetFromInternalStorage(
                 context.getApplicationContext(), css, PXStyleSheetOrigin.VIEW);
 
         if (stylesheet != null) {

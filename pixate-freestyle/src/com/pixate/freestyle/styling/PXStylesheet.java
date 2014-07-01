@@ -15,13 +15,17 @@
  ******************************************************************************/
 package com.pixate.freestyle.styling;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.pixate.freestyle.PixateFreestyle;
 import com.pixate.freestyle.styling.animation.PXKeyframe;
@@ -96,8 +100,16 @@ public class PXStylesheet {
 
     public static PXStylesheet getStyleSheetFromInternalStorage(Context context, String aFilePath,
                                                          PXStyleSheetOrigin origin) {
-            String source = new String(context.getFilesDir().getPath() + "/" + aFilePath);
-            return getStyleSheetFromSource(source, origin, aFilePath);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        String filePath = prefs.getString("designFilePath", null) + aFilePath;
+        String source = null;
+        try {
+            source = IOUtil.read(new FileInputStream(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return getStyleSheetFromSource(source, origin, aFilePath);
     }
 
 
