@@ -27,11 +27,14 @@ import java.net.URLDecoder;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Base64InputStream;
+import android.util.Log;
 
 import com.pixate.freestyle.PixateFreestyle;
 
@@ -91,8 +94,13 @@ public class UrlStreamOpener {
 
     private static InputStream openDocumentScheme(String urlString, boolean suppressErrorLog) {
         try {
-            return PixateFreestyle.getAppContext().openFileInput(
-                    urlString.substring(DOCUMENTS_SCHEME.length()));
+
+            String imageFilePath = urlString.replace("documents://Design", "");
+
+            Log.i(TAG, "Image file path = " + imageFilePath);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PixateFreestyle.getAppContext());
+            String filePath = prefs.getString("designFilePath", null) + imageFilePath;
+            return new FileInputStream(filePath);
         } catch (Exception e) {
             if (!suppressErrorLog) {
                 PXLog.e(TAG, e, "Unable to load the document at this url: " + urlString);
